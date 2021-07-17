@@ -8,30 +8,36 @@ on:
 
 jobs:
 
+  services:
+    mongodb:
+      image: mongo:3.4.23
+      ports:
+        - 5000:27017
+
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
 
-    - name: get mongodb
-      run: |
-        echo "docker pull mongo"
-        docker pull mongo
-    - name: start mongodb
-      run: |
-        echo "docker run --name mongo -d -p 5000:27017 mongo"
-        docker run --name mongo -d -p 5000:27017 mongo
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Integration Tests
-      run: dotnet test --no-build --verbosity normal
-      env: 
-        connectionString: "mongodb://localhost:5000"
+      #- name: get mongodb
+      #  run: |
+      #    echo "docker pull mongo"
+      #    docker pull mongo
+      #- name: start mongodb
+      #  run: |
+      #    echo "docker run --name mongo -d -p 5000:27017 mongo"
+      #    docker run --name mongo -d -p 5000:27017 mongo
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Integration Tests
+        run: dotnet test --no-build --verbosity normal
+        env:
+          connectionString: "mongodb://localhost:5000"
