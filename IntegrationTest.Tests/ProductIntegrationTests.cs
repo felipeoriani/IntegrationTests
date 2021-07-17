@@ -69,12 +69,4 @@ namespace IntegrationTest.Tests
 			Assert.True(result.DeletedCount > 0);
 		}
 	}
-
-	/*
-	 * Run a docker container
-	 * docker run --name mongo -d -p 27017:27017 mongo
-	 *
-	 *
-	 * 
-	 */
 }

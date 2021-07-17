@@ -11,7 +11,7 @@ namespace IntegrationTest.Tests
 		
 		public MongoFixture()
 		{
-			var connectionString = Environment.GetEnvironmentVariable("connectionString") ?? "mongodb://localhost:27017";
+			var connectionString = Environment.GetEnvironmentVariable("connectionString");
 			
 			var client = new MongoClient(connectionString);
 			Database = client.GetDatabase("IntegrationTests");
