@@ -7,24 +7,19 @@ on:
     branches: [ main ]
 
 jobs:
-
-  services:
-    mongodb:
-      image: mongo:3.4.23
-      ports:
-        - 5000:27017
-
   build:
-
     runs-on: ubuntu-latest
-
+    services:
+      mongodb:
+        image: mongo:3.4.23
+        ports:
+          - 5000:27017
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-
       #- name: get mongodb
       #  run: |
       #    echo "docker pull mongo"
