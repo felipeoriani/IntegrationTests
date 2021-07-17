@@ -14,6 +14,9 @@ namespace IntegrationTest.Tests
 		
 		public Repo(IOptions<DatabaseConfig> options)
 		{
+			if (string.IsNullOrWhiteSpace(options.Value.MyConnectionString))
+				throw new ArgumentNullException("MyConnectionString", "My ConnectionString cannot be null or empty.");
+
 			_connectionString = options.Value.MyConnectionString;
 			
 			var client = new MongoClient(_connectionString);
