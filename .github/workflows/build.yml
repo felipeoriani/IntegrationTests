@@ -35,4 +35,4 @@ jobs:
       - name: Integration Tests
         run: dotnet test --no-build --verbosity normal
         env:
-          Database__MyConnectionStrings: "mongodb://localhost:5000"
+          Database__MyConnectionString: "mongodb://localhost:5000"
