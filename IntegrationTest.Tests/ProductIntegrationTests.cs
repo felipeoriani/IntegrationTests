@@ -25,7 +25,7 @@ namespace IntegrationTest.Tests
 		[Fact, TestPriority(1)]
 		public async Task Products_Should_Have_Content()
 		{
-			var total = await _mongoFixture.Products.CountDocumentsAsync(new BsonDocument());
+			var total = await _mongoFixture.Repo.Products.CountDocumentsAsync(new BsonDocument());
 			_testOutput.WriteLine("Total in Products: " + total);
 
 			Assert.True(total > 0);
@@ -41,7 +41,7 @@ namespace IntegrationTest.Tests
 				Price = 3000m
 			};
 
-			await _mongoFixture.Products.InsertOneAsync(_product);
+			await _mongoFixture.Repo.Products.InsertOneAsync(_product);
 			
 			Assert.True(true);
 		}
@@ -54,7 +54,7 @@ namespace IntegrationTest.Tests
 			_product.Name = "Symbals";
 			_product.Price = 1500m;
 
-			var result = await _mongoFixture.Products.ReplaceOneAsync(filter, _product);
+			var result = await _mongoFixture.Repo.Products.ReplaceOneAsync(filter, _product);
 
 			Assert.True(result.ModifiedCount > 0);
 		}
@@ -64,7 +64,7 @@ namespace IntegrationTest.Tests
 		{
 			Expression<Func<Product, bool>> filter = x => x.Id == _product.Id;
 
-			var result = await _mongoFixture.Products.DeleteOneAsync(filter);
+			var result = await _mongoFixture.Repo.Products.DeleteOneAsync(filter);
 
 			Assert.True(result.DeletedCount > 0);
 		}

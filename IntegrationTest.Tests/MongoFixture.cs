@@ -1,48 +1,30 @@
-﻿using System;
-using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace IntegrationTest.Tests
 {
 	public class MongoFixture
 	{
-		public IMongoDatabase Database { get; }
-
-		public IMongoCollection<Product> Products => Database.GetCollection<Product>("products");
+		public Repo Repo { get; }
 		
 		public MongoFixture()
 		{
-			var connectionString = Environment.GetEnvironmentVariable("connectionString");
+			var configuration = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("appsettings.json",  optional: true, reloadOnChange: false)
+				.AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: false)
+				.AddEnvironmentVariables()
+				.Build();
 			
-			var client = new MongoClient(connectionString);
-			Database = client.GetDatabase("IntegrationTests");
+			var services = new ServiceCollection();
 
-			Products.InsertOne(new Product()
-			{
-				Id = Guid.NewGuid().ToString(),
-				Name = "Guitar",
-				Price = 1000m
-			});
+			services.Configure<DatabaseConfig>(options => configuration.GetSection(DatabaseConfig.ConfigurationKey).Bind(options));
+			services.AddTransient<Repo>();
 
-			Products.InsertOne(new Product()
-			{
-				Id = Guid.NewGuid().ToString(),
-				Name = "Bass Guitar",
-				Price = 1200m
-			});
-			
-			Products.InsertOne(new Product()
-			{
-				Id = Guid.NewGuid().ToString(),
-				Name = "Acoustic Guitar",
-				Price = 400m
-			});
+			var provider = services.BuildServiceProvider();
 
-			Products.InsertOne(new Product()
-			{
-				Id = Guid.NewGuid().ToString(),
-				Name = "Acoustic Bass Guitar",
-				Price = 800m
-			});
+			this.Repo = provider.GetService<Repo>();
 		}
 	}
 }
