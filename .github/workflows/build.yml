@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mongodb:
-        image: mongo:3.4.23
+        image: mongo:4.0.25
         ports:
           - 5000:27017
     steps:
